@@ -3,7 +3,6 @@ package com.t_negi.www.blueduck;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.twitter.sdk.android.core.TwitterCore;
 
@@ -11,6 +10,8 @@ public class MainActivity extends AppCompatActivity {
 
     /** ログイン処理リクエストコード */
     static final int LOGIN_REQUEST_CODE = 11;
+    /** タイムライン取得処理リクエストコード */
+    static final int TIMELINE_REQUEST_CODE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +23,8 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, LOGIN_REQUEST_CODE);
 
         } else {
-            Toast toast = Toast.makeText(MainActivity.this, "ログイン中", Toast.LENGTH_LONG);
-            toast.show();
-
             Intent intent = new Intent(this, TimelineActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, TIMELINE_REQUEST_CODE);
         }
     }
 
@@ -34,5 +32,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Intent intent = new Intent(this, TimelineActivity.class);
+                startActivityForResult(intent, TIMELINE_REQUEST_CODE);
+
+            }
+        } else{
+            // ログイン画面,タイムライン画面からキャンセルで戻ってきたらアプリ終了
+            finish();
+        }
     }
 }

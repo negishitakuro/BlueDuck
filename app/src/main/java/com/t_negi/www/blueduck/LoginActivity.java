@@ -26,8 +26,6 @@ public class LoginActivity extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 // Do something with result, which provides a TwitterSession for making API calls
 
-//                Toast toast = Toast.makeText(LoginActivity.this, "ログイン成功", Toast.LENGTH_LONG);
-//                toast.show();
             }
 
             @Override
@@ -48,7 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.onActivityResult(requestCode, resultCode, data);
 
         // ログイン成功時
-        if (resultCode == -1) {
+        if (resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
             // ログイン処理終了
             finish();
         }

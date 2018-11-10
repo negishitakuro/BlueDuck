@@ -46,7 +46,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetAdapterL
 
         listView = (ListView) findViewById(R.id.my_list_view);
         adapter = new TweetAdapter(this, tweetList, this);
-
         listView.setAdapter(adapter);
 
         getHomeTimeline();
@@ -66,8 +65,8 @@ public class TimelineActivity extends AppCompatActivity implements TweetAdapterL
                 // ListViewの表示を更新
                 adapter.notifyDataSetChanged();
 
-                Toast toast = Toast.makeText(TimelineActivity.this, "タイムライン取得成功", Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(TimelineActivity.this, "タイムライン取得成功", Toast.LENGTH_LONG);
+//                toast.show();
             }
 
             @Override
