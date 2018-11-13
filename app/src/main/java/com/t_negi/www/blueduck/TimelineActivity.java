@@ -3,6 +3,7 @@ package com.t_negi.www.blueduck;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -27,6 +28,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetAdapterL
     ListView listView;
     List<Tweet> tweetList = new ArrayList<>();
     TweetAdapter adapter;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,19 @@ public class TimelineActivity extends AppCompatActivity implements TweetAdapterL
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+//        mSwipeRefreshLayout.setColorSchemeResources(R.color., R.color.red, R.color.blue, R.color.yellow);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 引っ張って離した時に呼ばれます。
+                Snackbar.make(listView, "pull!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                getHomeTimeline();
             }
         });
 
@@ -60,17 +75,24 @@ public class TimelineActivity extends AppCompatActivity implements TweetAdapterL
         call.enqueue(new Callback<List<Tweet>>() {
             @Override
             public void success(Result<List<Tweet>> result) {
+
+                if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    tweetList.clear();
+                }
+
                 // ListViewのListに取得したツイートのリストを追加
                 tweetList.addAll(result.data);
                 // ListViewの表示を更新
                 adapter.notifyDataSetChanged();
 
-//                Toast toast = Toast.makeText(TimelineActivity.this, "タイムライン取得成功", Toast.LENGTH_LONG);
-//                toast.show();
             }
 
             @Override
             public void failure(TwitterException exception) {
+                Snackbar.make(listView, "get timeline error", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
                 Toast toast = Toast.makeText(TimelineActivity.this, "タイムライン取得エラー", Toast.LENGTH_LONG);
                 toast.show();
             }

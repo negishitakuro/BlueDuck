@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.t_negi.www.blueduck.utils.DateUtils;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class TweetAdapter extends BaseAdapter {
             viewHolder.iconImageView = (ImageView)view.findViewById(R.id.imageView);
             viewHolder.userNameTextView = (TextView)view.findViewById(R.id.user_name);
             viewHolder.screenNameTextView = (TextView)view.findViewById(R.id.screen_name);
+            viewHolder.tweetTimeTextView = (TextView)view.findViewById(R.id.tweet_time);
             viewHolder.tweetTextTextView = (TextView)view.findViewById(R.id.tweet_text);
             viewHolder.favoriteCountTextView = (TextView)view.findViewById(R.id.favorite_count);
             viewHolder.reTweetCountTextView = (TextView)view.findViewById(R.id.rt_count);
@@ -79,24 +81,12 @@ public class TweetAdapter extends BaseAdapter {
 
         }
 
-//        URL url;
-//        InputStream istream;
-//        try {
-//            url = new URL(tweet.user.profileImageUrl);
-//            istream = url.openStream();
-//            Bitmap oBmp = BitmapFactory.decodeStream(istream);
-//            iconImageView.setImageBitmap(oBmp);
-//            istream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//
-//        }
-
         Tweet tweet = tweetList.get(position);
 
+        GlideApp.with(context).load(tweet.user.profileImageUrl).circleCrop().into(viewHolder.iconImageView);
         viewHolder.userNameTextView.setText(tweet.user.name);
         viewHolder.screenNameTextView.setText(tweet.user.screenName);
+        viewHolder.tweetTimeTextView.setText("・" + DateUtils.getDateStringFromTwitterDate(tweet.createdAt));
         viewHolder.tweetTextTextView.setText(tweet.text);
         viewHolder.favoriteCountTextView.setText(String.valueOf(tweet.favoriteCount));
         viewHolder.reTweetCountTextView.setText(String.valueOf(tweet.retweetCount));
@@ -109,6 +99,7 @@ public class TweetAdapter extends BaseAdapter {
         ImageView iconImageView;
         TextView userNameTextView;
         TextView screenNameTextView;
+        TextView tweetTimeTextView;
         TextView tweetTextTextView;
         TextView favoriteCountTextView;
         TextView reTweetCountTextView;
